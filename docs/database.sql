@@ -1,15 +1,9 @@
 SET NAMES utf8mb4;
 
-CREATE DATABASE IF NOT EXISTS `galgallery`
-    DEFAULT CHARACTER SET utf8mb4
-    DEFAULT COLLATE utf8mb4_unicode_ci;
+DROP DATABASE IF EXISTS `galgallery`;
+CREATE DATABASE `galgallery` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE `galgallery`;
-
-DROP TABLE IF EXISTS `image_tag`;
-DROP TABLE IF EXISTS `gallery_image`;
-DROP TABLE IF EXISTS `tag`;
-DROP TABLE IF EXISTS `game`;
 
 CREATE TABLE `game` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
