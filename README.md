@@ -4,7 +4,7 @@ GalGallery is a personal GalGame image gallery project with a separated Spring B
 
 ## Ports
 
-- Backend: `http://localhost:8080`
+- Backend: `http://localhost:8090`
 - Frontend: `http://localhost:5173`
 
 ## Uploads
@@ -18,7 +18,7 @@ backend/uploads/
 The backend exposes them through:
 
 ```text
-http://localhost:8080/uploads/**
+http://localhost:8090/uploads/**
 ```
 
 ## Development
