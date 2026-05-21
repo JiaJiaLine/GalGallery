@@ -30,6 +30,14 @@ cd backend
 mvn spring-boot:run
 ```
 
+Optional database environment variables:
+
+```text
+DB_URL
+DB_USERNAME
+DB_PASSWORD
+```
+
 Start the frontend:
 
 ```bash
