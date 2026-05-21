@@ -7,7 +7,7 @@ CREATE DATABASE IF NOT EXISTS `galgallery`
 USE `galgallery`;
 
 DROP TABLE IF EXISTS `image_tag`;
-DROP TABLE IF EXISTS `image`;
+DROP TABLE IF EXISTS `gallery_image`;
 DROP TABLE IF EXISTS `tag`;
 DROP TABLE IF EXISTS `game`;
 
@@ -45,9 +45,9 @@ CREATE TABLE `tag` (
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
-  COMMENT='Image tag table';
+  COMMENT='Tag table';
 
-CREATE TABLE `image` (
+CREATE TABLE `gallery_image` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
     `game_id` BIGINT UNSIGNED NOT NULL COMMENT 'Related game ID',
     `type` VARCHAR(30) NOT NULL COMMENT 'Image type: character, photo, screenshot',
@@ -64,16 +64,16 @@ CREATE TABLE `image` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT 'Updated time',
     `deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Logical delete flag: 0 normal, 1 deleted',
     PRIMARY KEY (`id`),
-    KEY `idx_image_game_id` (`game_id`),
-    KEY `idx_image_type` (`type`),
-    KEY `idx_image_game_type` (`game_id`, `type`, `deleted`),
-    KEY `idx_image_deleted_sort` (`deleted`, `sort_order`, `id`),
-    KEY `idx_image_created_at` (`created_at`),
-    CONSTRAINT `fk_image_game`
+    KEY `idx_gallery_image_game_id` (`game_id`),
+    KEY `idx_gallery_image_type` (`type`),
+    KEY `idx_gallery_image_game_type` (`game_id`, `type`, `deleted`),
+    KEY `idx_gallery_image_deleted_sort` (`deleted`, `sort_order`, `id`),
+    KEY `idx_gallery_image_created_at` (`created_at`),
+    CONSTRAINT `fk_gallery_image_game`
         FOREIGN KEY (`game_id`) REFERENCES `game` (`id`)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
-    CONSTRAINT `ck_image_type`
+    CONSTRAINT `ck_gallery_image_type`
         CHECK (`type` IN ('character', 'photo', 'screenshot'))
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
@@ -82,18 +82,18 @@ CREATE TABLE `image` (
 
 CREATE TABLE `image_tag` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary key',
-    `image_id` BIGINT UNSIGNED NOT NULL COMMENT 'Related image ID',
+    `gallery_image_id` BIGINT UNSIGNED NOT NULL COMMENT 'Related gallery image ID',
     `tag_id` BIGINT UNSIGNED NOT NULL COMMENT 'Related tag ID',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) COMMENT 'Created time',
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3) COMMENT 'Updated time',
     `deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Logical delete flag: 0 normal, 1 deleted',
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_image_tag` (`image_id`, `tag_id`),
-    KEY `idx_image_tag_image_id` (`image_id`),
+    UNIQUE KEY `uk_image_tag_gallery_image_tag` (`gallery_image_id`, `tag_id`),
+    KEY `idx_image_tag_gallery_image_id` (`gallery_image_id`),
     KEY `idx_image_tag_tag_id` (`tag_id`),
     KEY `idx_image_tag_deleted` (`deleted`),
-    CONSTRAINT `fk_image_tag_image`
-        FOREIGN KEY (`image_id`) REFERENCES `image` (`id`)
+    CONSTRAINT `fk_image_tag_gallery_image`
+        FOREIGN KEY (`gallery_image_id`) REFERENCES `gallery_image` (`id`)
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
     CONSTRAINT `fk_image_tag_tag`
@@ -103,7 +103,7 @@ CREATE TABLE `image_tag` (
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci
-  COMMENT='Image and tag relation table';
+  COMMENT='Gallery image and tag relation table';
 
 INSERT INTO `game`
     (`id`, `name`, `original_name`, `cover_url`, `description`, `developer`, `release_date`, `sort_order`)
@@ -121,7 +121,7 @@ VALUES
     (4, 'favorite', '#67C23A'),
     (5, 'standing-art', '#909399');
 
-INSERT INTO `image`
+INSERT INTO `gallery_image`
     (`id`, `game_id`, `type`, `title`, `image_url`, `thumbnail_url`, `original_filename`, `file_size`, `width`, `height`, `mime_type`, `sort_order`)
 VALUES
     (1, 1, 'character', 'Shiroha standing art', '/uploads/images/summer-pockets-shiroha.webp', '/uploads/thumbs/summer-pockets-shiroha.webp', 'shiroha-standing.webp', 842120, 1200, 1800, 'image/webp', 10),
@@ -131,7 +131,7 @@ VALUES
     (5, 3, 'photo', 'Cafe background reference', '/uploads/images/cafe-stella-cafe.webp', '/uploads/thumbs/cafe-stella-cafe.webp', 'cafe-background.webp', 1012460, 1920, 1080, 'image/webp', 10);
 
 INSERT INTO `image_tag`
-    (`id`, `image_id`, `tag_id`)
+    (`id`, `gallery_image_id`, `tag_id`)
 VALUES
     (1, 1, 1),
     (2, 1, 5),
