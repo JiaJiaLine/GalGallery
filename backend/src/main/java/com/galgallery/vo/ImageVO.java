@@ -1,17 +1,12 @@
-package com.galgallery.entity;
+package com.galgallery.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 
 @Data
-@TableName("gallery_image")
-public class GalleryImage {
+public class ImageVO {
 
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     private Long gameId;
@@ -38,10 +33,9 @@ public class GalleryImage {
 
     private Integer sortOrder;
 
+    private List<TagVO> tags;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    @TableLogic
-    private Integer deleted;
 }

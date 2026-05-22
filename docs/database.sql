@@ -46,6 +46,7 @@ CREATE TABLE `gallery_image` (
     `game_id` BIGINT UNSIGNED NOT NULL COMMENT 'Related game ID',
     `type` VARCHAR(30) NOT NULL COMMENT 'Image type: character, photo, screenshot',
     `title` VARCHAR(100) NULL COMMENT 'Image title',
+    `description` TEXT NULL COMMENT 'Image description',
     `image_url` VARCHAR(255) NOT NULL COMMENT 'Original image access URL',
     `thumbnail_url` VARCHAR(255) NULL COMMENT 'Thumbnail image access URL',
     `original_filename` VARCHAR(255) NOT NULL COMMENT 'Original uploaded filename',
@@ -116,13 +117,13 @@ VALUES
     (5, 'standing-art', '#909399');
 
 INSERT INTO `gallery_image`
-    (`id`, `game_id`, `type`, `title`, `image_url`, `thumbnail_url`, `original_filename`, `file_size`, `width`, `height`, `mime_type`, `sort_order`)
+    (`id`, `game_id`, `type`, `title`, `description`, `image_url`, `thumbnail_url`, `original_filename`, `file_size`, `width`, `height`, `mime_type`, `sort_order`)
 VALUES
-    (1, 1, 'character', 'Shiroha standing art', '/uploads/images/summer-pockets-shiroha.webp', '/uploads/thumbs/summer-pockets-shiroha.webp', 'shiroha-standing.webp', 842120, 1200, 1800, 'image/webp', 10),
-    (2, 1, 'screenshot', 'Island opening scene', '/uploads/images/summer-pockets-opening.webp', '/uploads/thumbs/summer-pockets-opening.webp', 'opening-scene.webp', 1248120, 1920, 1080, 'image/webp', 20),
-    (3, 2, 'character', 'Asuka standing art', '/uploads/images/aokana-asuka.webp', '/uploads/thumbs/aokana-asuka.webp', 'asuka-standing.webp', 932880, 1100, 1700, 'image/webp', 10),
-    (4, 2, 'screenshot', 'Flying circus match', '/uploads/images/aokana-match.webp', '/uploads/thumbs/aokana-match.webp', 'flying-circus-match.webp', 1456000, 1920, 1080, 'image/webp', 20),
-    (5, 3, 'photo', 'Cafe background reference', '/uploads/images/cafe-stella-cafe.webp', '/uploads/thumbs/cafe-stella-cafe.webp', 'cafe-background.webp', 1012460, 1920, 1080, 'image/webp', 10);
+    (1, 1, 'character', 'Shiroha standing art', 'Sample character standing art.', '/uploads/images/summer-pockets-shiroha.webp', '/uploads/thumbs/summer-pockets-shiroha.webp', 'shiroha-standing.webp', 842120, 1200, 1800, 'image/webp', 10),
+    (2, 1, 'screenshot', 'Island opening scene', 'Sample opening scene screenshot.', '/uploads/images/summer-pockets-opening.webp', '/uploads/thumbs/summer-pockets-opening.webp', 'opening-scene.webp', 1248120, 1920, 1080, 'image/webp', 20),
+    (3, 2, 'character', 'Asuka standing art', 'Sample heroine standing art.', '/uploads/images/aokana-asuka.webp', '/uploads/thumbs/aokana-asuka.webp', 'asuka-standing.webp', 932880, 1100, 1700, 'image/webp', 10),
+    (4, 2, 'screenshot', 'Flying circus match', 'Sample match screenshot.', '/uploads/images/aokana-match.webp', '/uploads/thumbs/aokana-match.webp', 'flying-circus-match.webp', 1456000, 1920, 1080, 'image/webp', 20),
+    (5, 3, 'photo', 'Cafe background reference', 'Sample background reference image.', '/uploads/images/cafe-stella-cafe.webp', '/uploads/thumbs/cafe-stella-cafe.webp', 'cafe-background.webp', 1012460, 1920, 1080, 'image/webp', 10);
 
 INSERT INTO `image_tag`
     (`id`, `gallery_image_id`, `tag_id`)
