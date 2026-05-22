@@ -1,0 +1,27 @@
+meta {
+  name: 修改游戏
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/games/1
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Updated Test Game",
+    "originalName": "Updated Test Game Original",
+    "coverUrl": "/uploads/covers/updated-test-game.webp",
+    "description": "A test game updated from Bruno.",
+    "developer": "Updated Studio",
+    "releaseDate": "2026-05-22",
+    "sortOrder": 50
+  }
+}

@@ -1,0 +1,27 @@
+meta {
+  name: 新增游戏
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/games
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Test Game",
+    "originalName": "Test Game Original",
+    "coverUrl": "/uploads/covers/test-game.webp",
+    "description": "A test game created from Bruno.",
+    "developer": "Test Studio",
+    "releaseDate": "2026-05-22",
+    "sortOrder": 100
+  }
+}
