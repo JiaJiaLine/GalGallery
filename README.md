@@ -21,6 +21,8 @@ The backend exposes them through:
 http://localhost:8090/uploads/**
 ```
 
+The default maximum upload size is `50MB`.
+
 ## Development
 
 Start the backend:
