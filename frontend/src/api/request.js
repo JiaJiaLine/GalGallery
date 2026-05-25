@@ -6,9 +6,20 @@ const request = axios.create({
 })
 
 request.interceptors.response.use(
-  (response) => response.data,
-  (error) => Promise.reject(error)
+  (response) => {
+    const payload = response.data
+    if (payload && typeof payload === 'object' && 'code' in payload) {
+      if (payload.code !== 200) {
+        return Promise.reject(new Error(payload.message || '请求失败'))
+      }
+      return payload.data
+    }
+    return payload
+  },
+  (error) => {
+    const message = error.response?.data?.message || error.message || '网络请求失败'
+    return Promise.reject(new Error(message))
+  }
 )
 
 export default request
-
