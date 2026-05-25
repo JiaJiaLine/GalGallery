@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.galgallery.common.PageResult;
 import com.galgallery.common.ResultCode;
+import com.galgallery.config.GalGalleryProperties;
 import com.galgallery.dto.ImageQueryDTO;
 import com.galgallery.dto.ImageUpdateDTO;
 import com.galgallery.dto.ImageUploadDTO;
@@ -47,16 +48,19 @@ public class GalleryImageServiceImpl extends ServiceImpl<GalleryImageMapper, Gal
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp");
     private static final Set<String> ALLOWED_MIME_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
     private static final String IMAGE_ACCESS_PREFIX = "/uploads/images/";
-    private static final Path IMAGE_UPLOAD_DIR = Path.of("uploads", "images");
+    private static final String IMAGE_DIRECTORY = "images";
 
     private final GameMapper gameMapper;
     private final ImageTagMapper imageTagMapper;
     private final TagMapper tagMapper;
+    private final Path imageUploadDir;
 
-    public GalleryImageServiceImpl(GameMapper gameMapper, ImageTagMapper imageTagMapper, TagMapper tagMapper) {
+    public GalleryImageServiceImpl(GameMapper gameMapper, ImageTagMapper imageTagMapper, TagMapper tagMapper,
+                                   GalGalleryProperties properties) {
         this.gameMapper = gameMapper;
         this.imageTagMapper = imageTagMapper;
         this.tagMapper = tagMapper;
+        this.imageUploadDir = Path.of(properties.getUpload().getPath(), IMAGE_DIRECTORY);
     }
 
     @Override
@@ -104,7 +108,7 @@ public class GalleryImageServiceImpl extends ServiceImpl<GalleryImageMapper, Gal
                 : file.getOriginalFilename());
         String extension = getExtension(originalFilename);
         String storedFilename = UUID.randomUUID() + "." + extension;
-        Path target = IMAGE_UPLOAD_DIR.toAbsolutePath().normalize().resolve(storedFilename);
+        Path target = imageUploadDir.toAbsolutePath().normalize().resolve(storedFilename);
         try {
             Files.createDirectories(target.getParent());
             file.transferTo(target);
@@ -145,8 +149,12 @@ public class GalleryImageServiceImpl extends ServiceImpl<GalleryImageMapper, Gal
             ensureTagsExist(tagIds);
         }
 
-        image.setTitle(dto.getTitle());
-        image.setDescription(dto.getDescription());
+        if (dto.getTitle() != null) {
+            image.setTitle(dto.getTitle());
+        }
+        if (dto.getDescription() != null) {
+            image.setDescription(dto.getDescription());
+        }
         if (StringUtils.hasText(type)) {
             image.setType(type);
         }
