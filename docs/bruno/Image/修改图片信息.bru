@@ -1,0 +1,25 @@
+meta {
+  name: 修改图片信息
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/images/1
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "Updated Image",
+    "description": "Updated from Bruno",
+    "type": "screenshot",
+    "sortOrder": 20,
+    "tagIds": "1"
+  }
+}

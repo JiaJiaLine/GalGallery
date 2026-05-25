@@ -1,0 +1,22 @@
+meta {
+  name: 新增标签
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/tags
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "女主",
+    "color": "#ff6699"
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: 上传图片
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/images/upload
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  file: 
+  gameId: 1
+  type: character
+  title: Test Image
+  description: Uploaded from Bruno
+  sortOrder: 10
+  tagIds: 1,2
+}

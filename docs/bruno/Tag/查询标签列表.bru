@@ -1,0 +1,11 @@
+meta {
+  name: 查询标签列表
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/tags?page=1&size=10
+  body: none
+  auth: none
+}

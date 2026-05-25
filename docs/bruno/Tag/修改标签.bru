@@ -1,0 +1,22 @@
+meta {
+  name: 修改标签
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/tags/1
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "女主角",
+    "color": "#ff3366"
+  }
+}

@@ -1,0 +1,11 @@
+meta {
+  name: 查询图片列表
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/images?gameId=1&type=character&page=1&size=10
+  body: none
+  auth: none
+}
