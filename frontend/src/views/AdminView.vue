@@ -11,6 +11,21 @@
     <el-tabs v-model="activeTab" class="admin-tabs">
       <el-tab-pane label="游戏管理" name="games">
         <section class="admin-section">
+          <el-form inline class="admin-toolbar" @submit.prevent>
+            <el-form-item label="游戏搜索">
+              <el-input
+                v-model="gameKeyword"
+                clearable
+                placeholder="输入游戏名关键词"
+                @keyup.enter="fetchAdminGames"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" type="primary" plain @click="fetchAdminGames">搜索</el-button>
+              <el-button :icon="Refresh" @click="resetGameSearch">重置</el-button>
+            </el-form-item>
+          </el-form>
+
           <el-form :model="gameForm" label-width="92px" class="admin-form">
             <el-form-item label="游戏名">
               <el-input v-model="gameForm.name" placeholder="CLANNAD" />
@@ -42,7 +57,7 @@
               <el-button type="primary" :icon="Plus" :loading="savingGame" @click="submitGame">
                 新增游戏
               </el-button>
-              <el-button :icon="Refresh" @click="fetchAdminGames">查询游戏</el-button>
+              <el-button :icon="Refresh" @click="fetchAdminGames">刷新列表</el-button>
             </el-form-item>
           </el-form>
 
@@ -57,6 +72,21 @@
 
       <el-tab-pane label="标签管理" name="tags">
         <section class="admin-section">
+          <el-form inline class="admin-toolbar" @submit.prevent>
+            <el-form-item label="标签搜索">
+              <el-input
+                v-model="tagKeyword"
+                clearable
+                placeholder="输入标签名关键词"
+                @keyup.enter="fetchAdminTags"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" type="primary" plain @click="fetchAdminTags">搜索</el-button>
+              <el-button :icon="Refresh" @click="resetTagSearch">重置</el-button>
+            </el-form-item>
+          </el-form>
+
           <el-form :model="tagForm" inline class="tag-form">
             <el-form-item label="名称">
               <el-input v-model="tagForm.name" placeholder="女主" />
@@ -68,7 +98,7 @@
               <el-button type="primary" :icon="Plus" :loading="savingTag" @click="submitTag">
                 新增标签
               </el-button>
-              <el-button :icon="Refresh" @click="fetchAdminTags">查询标签</el-button>
+              <el-button :icon="Refresh" @click="fetchAdminTags">刷新列表</el-button>
             </el-form-item>
           </el-form>
 
@@ -86,7 +116,7 @@
       </el-tab-pane>
 
       <el-tab-pane label="图片上传" name="upload">
-        <UploadPanel :games="adminGames" :tags="adminTags" @uploaded="handleImageUploaded" />
+        <UploadPanel :games="uploadGames" :tags="uploadTags" @uploaded="handleImageUploaded" />
       </el-tab-pane>
     </el-tabs>
   </main>
@@ -94,7 +124,7 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
-import { ArrowLeft, Plus, Refresh } from '@element-plus/icons-vue'
+import { ArrowLeft, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { createGame, pageGames } from '../api/gameApi'
 import { createTag, listAllTags, pageTags } from '../api/tagApi'
@@ -103,6 +133,10 @@ import UploadPanel from '../components/UploadPanel.vue'
 const activeTab = ref('games')
 const adminGames = ref([])
 const adminTags = ref([])
+const uploadGames = ref([])
+const uploadTags = ref([])
+const gameKeyword = ref('')
+const tagKeyword = ref('')
 const savingGame = ref(false)
 const savingTag = ref(false)
 
@@ -123,7 +157,12 @@ const tagForm = reactive({
 
 async function fetchAdminGames() {
   try {
-    const result = await pageGames({ page: 1, size: 100 })
+    const keyword = gameKeyword.value.trim()
+    const result = await pageGames({
+      page: 1,
+      size: 100,
+      keyword: keyword || undefined
+    })
     adminGames.value = result?.records || []
   } catch (error) {
     ElMessage.error(error.message)
@@ -132,11 +171,39 @@ async function fetchAdminGames() {
 
 async function fetchAdminTags() {
   try {
-    const pageResult = await pageTags({ page: 1, size: 100 })
-    adminTags.value = pageResult?.records?.length ? pageResult.records : await listAllTags()
+    const keyword = tagKeyword.value.trim()
+    const pageResult = await pageTags({
+      page: 1,
+      size: 100,
+      keyword: keyword || undefined
+    })
+    adminTags.value = pageResult?.records || []
   } catch (error) {
     ElMessage.error(error.message)
   }
+}
+
+async function fetchUploadOptions() {
+  try {
+    const [gameResult, tagResult] = await Promise.all([
+      pageGames({ page: 1, size: 100 }),
+      listAllTags()
+    ])
+    uploadGames.value = gameResult?.records || []
+    uploadTags.value = tagResult || []
+  } catch (error) {
+    ElMessage.error(error.message)
+  }
+}
+
+function resetGameSearch() {
+  gameKeyword.value = ''
+  fetchAdminGames()
+}
+
+function resetTagSearch() {
+  tagKeyword.value = ''
+  fetchAdminTags()
 }
 
 async function submitGame() {
@@ -158,6 +225,7 @@ async function submitGame() {
       sortOrder: 0
     })
     fetchAdminGames()
+    fetchUploadOptions()
   } catch (error) {
     ElMessage.error(error.message)
   } finally {
@@ -176,6 +244,7 @@ async function submitTag() {
     ElMessage.success('标签已新增')
     Object.assign(tagForm, { name: '', color: '#ff6699' })
     fetchAdminTags()
+    fetchUploadOptions()
   } catch (error) {
     ElMessage.error(error.message)
   } finally {
@@ -185,10 +254,12 @@ async function submitTag() {
 
 function handleImageUploaded() {
   fetchAdminGames()
+  fetchUploadOptions()
 }
 
 onMounted(() => {
   fetchAdminGames()
   fetchAdminTags()
+  fetchUploadOptions()
 })
 </script>

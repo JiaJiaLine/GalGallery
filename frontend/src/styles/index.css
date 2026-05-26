@@ -295,6 +295,15 @@ h1 {
   max-width: 980px;
 }
 
+.admin-toolbar {
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.admin-toolbar .el-input {
+  width: min(320px, 70vw);
+}
+
 .admin-form {
   width: min(720px, 100%);
 }
