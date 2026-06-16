@@ -113,7 +113,7 @@ public class GalleryImageServiceImpl extends ServiceImpl<GalleryImageMapper, Gal
             Files.createDirectories(target.getParent());
             file.transferTo(target);
         } catch (IOException exception) {
-            throw new BusinessException(ResultCode.INTERNAL_ERROR.getCode(), "Failed to save uploaded image");
+            throw new BusinessException(ResultCode.INTERNAL_ERROR.getCode(), "Failed to save uploaded image："+ exception.getMessage());
         }
 
         ImageSize imageSize = readImageSize(target);
